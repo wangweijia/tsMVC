@@ -1,5 +1,4 @@
-node_modules/
-lib/
-
-.vscode/*.log
-.vscode/**/*.log
+src
+tsconfig.json
+tslint.json
+.prettierrc
