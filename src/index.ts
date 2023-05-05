@@ -51,13 +51,14 @@ export function ModelCol(config: TConfig) {
 
 export function ModelEnter() {
   return function (constructor: any, _?: any) {
-    return class extends constructor {
+    return class {
       constructor(props?: any) {
-        super(props);
+        // super(props);
+        const tempThis = new constructor(props);
 
-        this._baseProse_ = props;
+        tempThis._baseProse_ = props;
 
-        this._baseKeys.forEach((propsKey: string) => {
+        tempThis._baseKeys.forEach((propsKey: string) => {
           const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey);
           const key = config.key || propsKey;
           if (props) {
@@ -71,7 +72,7 @@ export function ModelEnter() {
             if (value === null) {
               if (config.enableNULL) {
                 // 如果数据是 null，并且允许数据是 null，那么赋值 null
-                this[propsKey] = value;
+                tempThis[propsKey] = value;
                 return;
               }
               console.warn(`[key:${key}] is null`);
@@ -81,24 +82,24 @@ export function ModelEnter() {
             if (value !== undefined) {
               try {
                 if (!config.type || config.type === 'single') {
-                  this[propsKey] = value;
+                  tempThis[propsKey] = value;
                   return;
                 } else if (config.type === 'array') {
                   const tempConfig: IArrayConfig = config;
-                  this[propsKey] = (value || []).map((arrayItem: any) => {
+                  tempThis[propsKey] = (value || []).map((arrayItem: any) => {
                     return new tempConfig.arrayItem(arrayItem);
                   });
                   return;
                 } else if (config.type === 'object') {
                   const tempConfig: IObjectConfig = config;
-                  this[propsKey] = new tempConfig.objectItem(value);
+                  tempThis[propsKey] = new tempConfig.objectItem(value);
                   return;
                 } else if (config.type === 'date') {
                   const tempConfig: IDateConfig = config;
-                  this[propsKey] = dayjs(value).format(tempConfig.formatStr);
+                  tempThis[propsKey] = dayjs(value).format(tempConfig.formatStr);
                   return;
                 } else {
-                  this[propsKey] = value;
+                  tempThis[propsKey] = value;
                   return;
                 }
               } catch (error) {
@@ -110,6 +111,8 @@ export function ModelEnter() {
             console.warn('model init no props');
           }
         });
+
+        return tempThis;
       }
     } as any;
   };
