@@ -58,7 +58,7 @@ export function ModelEnter() {
         this._baseProse_ = props;
 
         this._baseKeys.forEach((propsKey: string) => {
-          const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey);
+          const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
           const key = config.key || propsKey;
           if (props) {
             const formatValue = config.formatValue;
