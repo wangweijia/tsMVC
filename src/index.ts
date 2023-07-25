@@ -52,8 +52,8 @@ export function ModelCol(config: TConfig) {
 export function ModelEnter() {
   return function (constructor: any, _?: any) {
     return class extends constructor {
-      constructor(props?: any) {
-        super(props);
+      constructor(props?: any, ...otherParams: any) {
+        super(props, ...(otherParams || {}));
 
         this._baseProse_ = props;
 
