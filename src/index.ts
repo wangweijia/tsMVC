@@ -110,6 +110,10 @@ export function ModelEnter() {
             console.warn('model init no props');
           }
         });
+
+        if (this._init_) {
+          this._init_(props, ...otherParams);
+        }
       }
     } as any;
   };
