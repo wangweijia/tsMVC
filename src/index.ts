@@ -61,7 +61,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
   };
 
   return function (constructor: any, _?: any) {
-    return class extends constructor {
+    const currentClass = class extends constructor {
       constructor(props?: any, ...otherParams: any) {
         super(props, ...(otherParams || {}));
 
@@ -103,7 +103,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
                   const tempConfig: IArrayConfig = config;
                   this[propsKey] = (value || []).map((arrayItem: any) => {
-                    customLog(`array arrayItem: ${arrayItem}`);
+                    customLog(`array arrayItem: ${JSON.stringify(arrayItem)}`);
 
                     return new tempConfig.arrayItem(arrayItem);
                   });
@@ -135,5 +135,6 @@ export function ModelEnter(opt: IClassOpt = {}) {
         }
       }
     } as any;
+    return currentClass;
   };
 }
