@@ -50,12 +50,14 @@ export function ModelCol(config: TConfig) {
 }
 
 interface IClassOpt {
-  _debuger?: boolean;
+  _debugger_?: boolean;
 }
 
 export function ModelEnter(opt: IClassOpt = {}) {
   const customLog = (info: string) => {
-    console.log('mvc info:', info);
+    if (opt._debugger_) {
+      console.log('mvc info:', info);
+    }
   };
 
   return function (constructor: any, _?: any) {
