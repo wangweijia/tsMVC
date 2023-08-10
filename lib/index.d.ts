@@ -22,7 +22,7 @@ interface IDateConfig extends IConfig {
 type TConfig = ISingleConfig | IArrayConfig | IObjectConfig | IDateConfig;
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;
 interface IClassOpt {
-    _debuger?: boolean;
+    _debugger_?: boolean;
 }
 export declare function ModelEnter(opt?: IClassOpt): (constructor: any, _?: any) => any;
 export {};
