@@ -49,7 +49,15 @@ export function ModelCol(config: TConfig) {
   };
 }
 
-export function ModelEnter() {
+interface IClassOpt {
+  _debuger?: boolean;
+}
+
+export function ModelEnter(opt: IClassOpt = {}) {
+  const customLog = (info: string) => {
+    console.log('mvc info:', info);
+  };
+
   return function (constructor: any, _?: any) {
     return class extends constructor {
       constructor(props?: any, ...otherParams: any) {
@@ -78,14 +86,20 @@ export function ModelEnter() {
               return;
             }
 
+            customLog(`value: ${value}`);
+
             if (value !== undefined) {
               try {
                 if (!config.type || config.type === 'single') {
                   this[propsKey] = value;
                   return;
                 } else if (config.type === 'array') {
+                  customLog(`array`);
+
                   const tempConfig: IArrayConfig = config;
                   this[propsKey] = (value || []).map((arrayItem: any) => {
+                    customLog(`array arrayItem: ${arrayItem}`);
+
                     return new tempConfig.arrayItem(arrayItem);
                   });
                   return;

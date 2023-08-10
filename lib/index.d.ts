@@ -21,5 +21,8 @@ interface IDateConfig extends IConfig {
 }
 type TConfig = ISingleConfig | IArrayConfig | IObjectConfig | IDateConfig;
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;
-export declare function ModelEnter(): (constructor: any, _?: any) => any;
+interface IClassOpt {
+    _debuger?: boolean;
+}
+export declare function ModelEnter(opt?: IClassOpt): (constructor: any, _?: any) => any;
 export {};
