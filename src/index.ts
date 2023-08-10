@@ -70,6 +70,9 @@ export function ModelEnter(opt: IClassOpt = {}) {
         this._baseKeys.forEach((propsKey: string) => {
           const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
           const key = config.key || propsKey;
+
+          customLog(`key: ${key}`);
+
           if (props) {
             const formatValue = config.formatValue;
             // 获取原始 数据
@@ -88,7 +91,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
               return;
             }
 
-            customLog(`value: ${value}`);
+            customLog(`value: ${JSON.stringify(value)}`);
 
             if (value !== undefined) {
               try {
