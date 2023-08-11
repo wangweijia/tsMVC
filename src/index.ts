@@ -54,9 +54,9 @@ interface IClassOpt {
 }
 
 export function ModelEnter(opt: IClassOpt = {}) {
-  const customLog = (info: string) => {
+  const customLog = (...info: any[]) => {
     if (opt._debugger_) {
-      console.log('mvc info:', info);
+      console.log('mvc info:', ...info);
     }
   };
 
@@ -71,7 +71,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
           const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
           const key = config.key || propsKey;
 
-          customLog(`key: ${key}`);
+          customLog(`key:`, key);
 
           if (props) {
             const formatValue = config.formatValue;
@@ -91,19 +91,20 @@ export function ModelEnter(opt: IClassOpt = {}) {
               return;
             }
 
-            customLog(`value: ${JSON.stringify(value)}`);
+            customLog(`value:`, value);
 
             if (value !== undefined) {
               try {
+                customLog(`type`, config.type);
+
                 if (!config.type || config.type === 'single') {
                   this[propsKey] = value;
                   return;
                 } else if (config.type === 'array') {
-                  customLog(`array`);
-
                   const tempConfig: IArrayConfig = config;
                   this[propsKey] = (value || []).map((arrayItem: any) => {
-                    customLog(`array arrayItem: ${JSON.stringify(arrayItem)}`);
+                    customLog('tempConfig.arrayItem:', tempConfig.arrayItem);
+                    customLog(`array arrayItem:`, arrayItem);
 
                     return new tempConfig.arrayItem(arrayItem);
                   });
