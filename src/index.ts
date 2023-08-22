@@ -132,6 +132,6 @@ export function ModelEnter(opt: IClassOpt = {}) {
       }
     };
 
-    return CurrentClass;
+    return CurrentClass as T;
   };
 }
