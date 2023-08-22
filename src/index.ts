@@ -6,17 +6,17 @@ import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/model
 
 const ClassBaseModelKey = Symbol('class');
 
-class BaseClass {
+export class ModelBaseClass {
   [k: string]: any;
   constructor(...args: any[]) {}
 
   _init_?(...p: any) {}
 
-  _initUUID_?() {
-    return getUUID();
+  _initUUID_?(v?: string) {
+    return v || getUUID();
   }
 }
-type TClass = typeof BaseClass;
+type TClass = typeof ModelBaseClass;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
@@ -82,10 +82,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
             customLog(`value:`, value);
 
             if (config.type === 'UUID') {
+              const uuid = getUUID();
               if (this._initUUID_) {
-                this[propsKey] = this._initUUID_();
+                this[propsKey] = this._initUUID_(uuid);
               } else {
-                this[propsKey] = getUUID();
+                this[propsKey] = uuid;
               }
               return;
             }

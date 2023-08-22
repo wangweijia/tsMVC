@@ -1,14 +1,12 @@
-import { ModelCol, ModelAutoUUID, ModelEnter } from '../src/index';
+import { ModelCol, ModelAutoUUID, ModelEnter, ModelBaseClass } from '../src/index';
 
 @ModelEnter()
-export class Demo {
+export class Demo extends ModelBaseClass {
   @ModelAutoUUID()
   uuid = '';
 
   @ModelCol({})
   test1 = '';
-
-  constructor(p) {}
 }
 
 const demo = new Demo({});
