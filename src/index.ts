@@ -2,17 +2,21 @@ import 'reflect-metadata';
 import * as dayjs from 'dayjs';
 import { getUUID } from './util/index';
 
-import {
-  IConfig,
-  ISingleConfig,
-  IObjectConfig,
-  IArrayConfig,
-  IDateConfig,
-  IUUIDConfig,
-  TConfig,
-} from './types/modelConfig';
+import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/modelConfig';
 
 const ClassBaseModelKey = Symbol('class');
+
+class BaseClass {
+  [k: string]: any;
+  constructor(...args: any[]) {}
+
+  _init_?(...p: any) {}
+
+  _initUUID_?() {
+    return getUUID();
+  }
+}
+type TClass = typeof BaseClass;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
@@ -43,13 +47,10 @@ export function ModelEnter(opt: IClassOpt = {}) {
     }
   };
 
-  return function (constructor: any, _?: any) {
-    class CurrentClass extends constructor {
-      // [k: string]: any;
-
+  return function <T extends TClass>(constructor: T, _?: any): T {
+    const CurrentClass = class extends constructor {
       constructor(...baseProps: Array<any>) {
         const [props, ...otherParams] = baseProps || [];
-        // props?: any, ...otherParams: any
         super(props, ...(otherParams || {}));
 
         this._baseProse_ = props;
@@ -129,8 +130,8 @@ export function ModelEnter(opt: IClassOpt = {}) {
           this._init_(props, ...otherParams);
         }
       }
-    }
+    };
 
-    return CurrentClass as any;
+    return CurrentClass;
   };
 }
