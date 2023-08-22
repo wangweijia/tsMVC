@@ -48,7 +48,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
   };
 
   return function <T extends TClass>(constructor: T, _?: any): T {
-    const CurrentClass = class extends constructor {
+    return class extends constructor {
       constructor(...baseProps: Array<any>) {
         const [props, ...otherParams] = baseProps || [];
         super(props, ...(otherParams || {}));
@@ -130,8 +130,6 @@ export function ModelEnter(opt: IClassOpt = {}) {
           this._init_(props, ...otherParams);
         }
       }
-    };
-
-    return CurrentClass as T;
+    } as T;
   };
 }
