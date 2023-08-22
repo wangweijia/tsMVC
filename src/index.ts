@@ -84,10 +84,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
               try {
                 customLog(`type`, config.type);
 
-                if (!config.type || config.type === 'UUID') {
-                  this[propsKey] = this._initUUID_();
-                } else if (!config.type || config.type === 'single') {
+                if (!config.type || config.type === 'single') {
                   this[propsKey] = value;
+                  return;
+                } else if (config.type === 'UUID') {
+                  this[propsKey] = this._initUUID_();
                   return;
                 } else if (config.type === 'array') {
                   const tempConfig: IArrayConfig = config;
