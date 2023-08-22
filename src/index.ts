@@ -45,7 +45,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
   return function (constructor: any, _?: any) {
     class CurrentClass extends constructor {
-      [k: string]: any;
+      // [k: string]: any;
 
       constructor(...baseProps: Array<any>) {
         const [props, ...otherParams] = baseProps || [];
@@ -88,7 +88,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   this[propsKey] = value;
                   return;
                 } else if (config.type === 'UUID') {
-                  this[propsKey] = this._initUUID_();
+                  if (this._initUUID_) {
+                    this[propsKey] = this._initUUID_();
+                  } else {
+                    this[propsKey] = getUUID();
+                  }
                   return;
                 } else if (config.type === 'array') {
                   const tempConfig: IArrayConfig = config;
@@ -124,12 +128,6 @@ export function ModelEnter(opt: IClassOpt = {}) {
         if (this._init_) {
           this._init_(props, ...otherParams);
         }
-      }
-
-      _init_(...p: any) {}
-
-      _initUUID_() {
-        return getUUID();
       }
     }
 
