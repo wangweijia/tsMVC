@@ -1,41 +1,18 @@
 import 'reflect-metadata';
 import * as dayjs from 'dayjs';
+import { getUUID } from './util/index';
+
+import {
+  IConfig,
+  ISingleConfig,
+  IObjectConfig,
+  IArrayConfig,
+  IDateConfig,
+  IUUIDConfig,
+  TConfig,
+} from './types/modelConfig';
 
 const ClassBaseModelKey = Symbol('class');
-
-interface IConfig {
-  // 数据源 key，用于对应原始数据，不传默认与 对象字段相同
-  key?: string;
-  // 是否可以 赋值 null
-  enableNULL?: boolean;
-  // 格式化 数据
-  formatValue?: (value: any, baseValue: any) => any;
-}
-
-// 普通类型
-interface ISingleConfig extends IConfig {
-  type?: 'single';
-}
-
-// 对象类型
-interface IObjectConfig extends IConfig {
-  type: 'object';
-  objectItem: any;
-}
-
-// 数组类型
-interface IArrayConfig extends IConfig {
-  type: 'array';
-  arrayItem: any;
-}
-
-// 时间类型
-interface IDateConfig extends IConfig {
-  type: 'date';
-  formatStr: string;
-}
-
-type TConfig = ISingleConfig | IArrayConfig | IObjectConfig | IDateConfig;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
@@ -47,6 +24,12 @@ export function ModelCol(config: TConfig) {
     const newFun = Reflect.metadata(ClassBaseModelKey, config);
     newFun(target, propertyKey);
   };
+}
+
+export function ModelAutoUUID() {
+  return ModelCol({
+    type: 'UUID',
+  });
 }
 
 interface IClassOpt {
@@ -61,8 +44,12 @@ export function ModelEnter(opt: IClassOpt = {}) {
   };
 
   return function (constructor: any, _?: any) {
-    const currentClass = class extends constructor {
-      constructor(props?: any, ...otherParams: any) {
+    class CurrentClass extends constructor {
+      [k: string]: any;
+
+      constructor(...baseProps: Array<any>) {
+        const [props, ...otherParams] = baseProps || [];
+        // props?: any, ...otherParams: any
         super(props, ...(otherParams || {}));
 
         this._baseProse_ = props;
@@ -97,7 +84,9 @@ export function ModelEnter(opt: IClassOpt = {}) {
               try {
                 customLog(`type`, config.type);
 
-                if (!config.type || config.type === 'single') {
+                if (!config.type || config.type === 'UUID') {
+                  this[propsKey] = this._initUUID_();
+                } else if (!config.type || config.type === 'single') {
                   this[propsKey] = value;
                   return;
                 } else if (config.type === 'array') {
@@ -135,7 +124,14 @@ export function ModelEnter(opt: IClassOpt = {}) {
           this._init_(props, ...otherParams);
         }
       }
-    } as any;
-    return currentClass;
+
+      _init_(...p: any) {}
+
+      _initUUID_() {
+        return getUUID();
+      }
+    }
+
+    return CurrentClass as any;
   };
 }
