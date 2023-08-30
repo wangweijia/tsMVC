@@ -15,13 +15,13 @@ export interface ISingleConfig extends IConfig {
 // 对象类型
 export interface IObjectConfig extends IConfig {
   type: 'object';
-  objectItem: any;
+  objectItem: 'Self' | (new (...p: any) => any);
 }
 
 // 数组类型
 export interface IArrayConfig extends IConfig {
   type: 'array';
-  arrayItem: any;
+  arrayItem: 'Self' | (new (...p: any) => any);
 }
 
 // 时间类型

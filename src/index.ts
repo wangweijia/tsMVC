@@ -48,7 +48,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
   };
 
   return function <T extends TClass>(constructor: T, _?: any): T {
-    return class extends constructor {
+    const NewClass = class extends constructor {
       constructor(...baseProps: Array<any>) {
         const [props, ...otherParams] = baseProps || [];
         super(props, ...(otherParams || {}));
@@ -104,12 +104,22 @@ export function ModelEnter(opt: IClassOpt = {}) {
                     customLog('tempConfig.arrayItem:', tempConfig.arrayItem);
                     customLog(`array arrayItem:`, arrayItem);
 
-                    return new tempConfig.arrayItem(arrayItem);
+                    if (tempConfig.arrayItem === 'Self') {
+                      return new NewClass(arrayItem);
+                    } else {
+                      return new tempConfig.arrayItem(arrayItem);
+                    }
                   });
                   return;
                 } else if (config.type === 'object') {
                   const tempConfig: IObjectConfig = config;
-                  this[propsKey] = new tempConfig.objectItem(value);
+
+                  if (tempConfig.objectItem === 'Self') {
+                    this[propsKey] = new NewClass(value);
+                  } else {
+                    this[propsKey] = new tempConfig.objectItem(value);
+                  }
+
                   return;
                 } else if (config.type === 'date') {
                   const tempConfig: IDateConfig = config;
@@ -134,5 +144,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
         }
       }
     } as T;
+
+    return NewClass;
   };
 }
