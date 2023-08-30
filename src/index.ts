@@ -15,6 +15,10 @@ export class ModelBaseClass {
   _initUUID_?(v?: string) {
     return v || getUUID();
   }
+
+  static InitWithList() {
+    return [];
+  }
 }
 type TClass = typeof ModelBaseClass;
 
@@ -143,6 +147,13 @@ export function ModelEnter(opt: IClassOpt = {}) {
           if (this._init_) {
             this._init_(props, ...otherParams);
           }
+        }
+
+        // 类方法，用于批量创建自己
+        static InitWithList(dataList: Array<any>) {
+          return dataList.map((item) => {
+            return new (createClass())(item);
+          });
         }
       };
     };
