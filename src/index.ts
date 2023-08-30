@@ -48,103 +48,105 @@ export function ModelEnter(opt: IClassOpt = {}) {
   };
 
   return function <T extends TClass>(constructor: T, _?: any): T {
-    const NewClass = class extends constructor {
-      constructor(...baseProps: Array<any>) {
-        const [props, ...otherParams] = baseProps || [];
-        super(props, ...(otherParams || {}));
+    const createClass = () => {
+      return class extends constructor {
+        constructor(...baseProps: Array<any>) {
+          const [props, ...otherParams] = baseProps || [];
+          super(props, ...(otherParams || {}));
 
-        this._baseProse_ = props;
+          this._baseProse_ = props;
 
-        this._baseKeys.forEach((propsKey: string) => {
-          const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
-          const key = config.key || propsKey;
+          this._baseKeys.forEach((propsKey: string) => {
+            const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
+            const key = config.key || propsKey;
 
-          customLog(`key:`, key);
+            customLog(`key:`, key);
 
-          if (props) {
-            const formatValue = config.formatValue;
-            // 获取原始 数据
-            let value = props[key];
-            // 如果有格式化方法，格式化数据
-            if (formatValue) {
-              value = formatValue(value, props);
-            }
-            if (value === null) {
-              if (config.enableNULL) {
-                // 如果数据是 null，并且允许数据是 null，那么赋值 null
-                this[propsKey] = value;
-                return;
+            if (props) {
+              const formatValue = config.formatValue;
+              // 获取原始 数据
+              let value = props[key];
+              // 如果有格式化方法，格式化数据
+              if (formatValue) {
+                value = formatValue(value, props);
               }
-              console.warn(`[key:${key}] is null`);
-              return;
-            }
-
-            customLog(`value:`, value);
-
-            if (config.type === 'UUID') {
-              const uuid = getUUID();
-              if (this._initUUID_) {
-                this[propsKey] = this._initUUID_(uuid);
-              } else {
-                this[propsKey] = uuid;
-              }
-              return;
-            }
-
-            if (value !== undefined) {
-              try {
-                customLog(`type`, config.type);
-
-                if (!config.type || config.type === 'single') {
-                  this[propsKey] = value;
-                  return;
-                } else if (config.type === 'array') {
-                  const tempConfig: IArrayConfig = config;
-                  this[propsKey] = (value || []).map((arrayItem: any) => {
-                    customLog('tempConfig.arrayItem:', tempConfig.arrayItem);
-                    customLog(`array arrayItem:`, arrayItem);
-
-                    if (tempConfig.arrayItem === 'Self') {
-                      return new NewClass(arrayItem);
-                    } else {
-                      return new tempConfig.arrayItem(arrayItem);
-                    }
-                  });
-                  return;
-                } else if (config.type === 'object') {
-                  const tempConfig: IObjectConfig = config;
-
-                  if (tempConfig.objectItem === 'Self') {
-                    this[propsKey] = new NewClass(value);
-                  } else {
-                    this[propsKey] = new tempConfig.objectItem(value);
-                  }
-
-                  return;
-                } else if (config.type === 'date') {
-                  const tempConfig: IDateConfig = config;
-                  this[propsKey] = dayjs(value).format(tempConfig.formatStr);
-                  return;
-                } else {
+              if (value === null) {
+                if (config.enableNULL) {
+                  // 如果数据是 null，并且允许数据是 null，那么赋值 null
                   this[propsKey] = value;
                   return;
                 }
-              } catch (error) {
-                console.log(`init [${key}] error with value [${value}]`);
-                console.error(error);
+                console.warn(`[key:${key}] is null`);
+                return;
               }
+
+              customLog(`value:`, value);
+
+              if (config.type === 'UUID') {
+                const uuid = getUUID();
+                if (this._initUUID_) {
+                  this[propsKey] = this._initUUID_(uuid);
+                } else {
+                  this[propsKey] = uuid;
+                }
+                return;
+              }
+
+              if (value !== undefined) {
+                try {
+                  customLog(`type`, config.type);
+
+                  if (!config.type || config.type === 'single') {
+                    this[propsKey] = value;
+                    return;
+                  } else if (config.type === 'array') {
+                    const tempConfig: IArrayConfig = config;
+                    this[propsKey] = (value || []).map((arrayItem: any) => {
+                      customLog('tempConfig.arrayItem:', tempConfig.arrayItem);
+                      customLog(`array arrayItem:`, arrayItem);
+
+                      if (tempConfig.arrayItem === 'Self') {
+                        return new (createClass() as any)(arrayItem);
+                      } else {
+                        return new tempConfig.arrayItem(arrayItem);
+                      }
+                    });
+                    return;
+                  } else if (config.type === 'object') {
+                    const tempConfig: IObjectConfig = config;
+
+                    if (tempConfig.objectItem === 'Self') {
+                      this[propsKey] = new (createClass() as any)(value);
+                    } else {
+                      this[propsKey] = new tempConfig.objectItem(value);
+                    }
+
+                    return;
+                  } else if (config.type === 'date') {
+                    const tempConfig: IDateConfig = config;
+                    this[propsKey] = dayjs(value).format(tempConfig.formatStr);
+                    return;
+                  } else {
+                    this[propsKey] = value;
+                    return;
+                  }
+                } catch (error) {
+                  console.log(`init [${key}] error with value [${value}]`);
+                  console.error(error);
+                }
+              }
+            } else {
+              console.warn('model init no props');
             }
-          } else {
-            console.warn('model init no props');
+          });
+
+          if (this._init_) {
+            this._init_(props, ...otherParams);
           }
-        });
-
-        if (this._init_) {
-          this._init_(props, ...otherParams);
         }
-      }
-    } as T;
+      };
+    };
 
-    return NewClass;
+    return createClass() as T;
   };
 }
