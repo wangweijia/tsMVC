@@ -3,8 +3,10 @@ export interface IConfig {
   key?: string;
   // 是否可以 赋值 null
   enableNULL?: boolean;
-  // 格式化 数据
+  // 格式化 数据(DTO)
   formatValue?: (value: any, baseValue: any) => any;
+  // 格式化 数据(OTD)
+  formatData?: (value: any, baseValue: any) => any;
 }
 
 // 普通类型
@@ -27,7 +29,8 @@ export interface IArrayConfig extends IConfig {
 // 时间类型
 export interface IDateConfig extends IConfig {
   type: 'date';
-  formatStr: string;
+  formatDTOKey?: string;
+  formatOTDKey?: string;
 }
 
 export interface IUUIDConfig extends IConfig {

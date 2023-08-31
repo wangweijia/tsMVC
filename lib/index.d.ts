@@ -5,6 +5,7 @@ export declare class ModelBaseClass {
     constructor(...args: any[]);
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
+    _OTD_(): {};
     static InitWithList(): never[];
 }
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { getUUID } from './util/index';
 
 import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/modelConfig';
@@ -14,6 +14,10 @@ export class ModelBaseClass {
 
   _initUUID_?(v?: string) {
     return v || getUUID();
+  }
+
+  _OTD_() {
+    return {};
   }
 
   static InitWithList() {
@@ -60,7 +64,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
           this._baseProse_ = props;
 
-          this._baseKeys.forEach((propsKey: string) => {
+          (this._baseKeys || []).forEach((propsKey: string) => {
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
             const key = config.key || propsKey;
 
@@ -128,7 +132,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
                     return;
                   } else if (config.type === 'date') {
                     const tempConfig: IDateConfig = config;
-                    this[propsKey] = dayjs(value).format(tempConfig.formatStr);
+                    if (tempConfig.formatDTOKey) {
+                      this[propsKey] = dayjs(value).format(tempConfig.formatDTOKey);
+                    } else {
+                      this[propsKey] = value;
+                    }
                     return;
                   } else {
                     this[propsKey] = value;
@@ -154,6 +162,78 @@ export function ModelEnter(opt: IClassOpt = {}) {
           return dataList.map((item) => {
             return new (createClass())(item);
           });
+        }
+
+        // 动态生成 数据对象
+        _OTD_(): any {
+          const data: any = {};
+
+          this._baseKeys.forEach((propsKey: string) => {
+            const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
+
+            // 反向数据格式化
+            const dataKey = config.key || propsKey;
+            // 格式化数据
+            const formatData = config.formatData;
+            // 获取原始 数据
+            let value = this[propsKey];
+
+            // 如果有格式化方法，格式化数据
+            if (formatData) {
+              value = formatData(value, this);
+            }
+
+            if (config.type === 'UUID') {
+              return;
+            }
+            if (value) {
+              try {
+                if (!config.type || config.type === 'single') {
+                  // 普通数据
+
+                  data[dataKey] = value;
+
+                  return;
+                } else if (config.type === 'array') {
+                  // 列表
+
+                  data[dataKey] = (value || []).map((item: any) => {
+                    if (item._OTD_) {
+                      return item._OTD_();
+                    }
+                    return item;
+                  });
+
+                  return;
+                } else if (config.type === 'object') {
+                  // 对象
+
+                  data[dataKey] = value._OTD_ ? value._OTD_() : value;
+
+                  return;
+                } else if (config.type === 'date') {
+                  // 日期
+                  const tempConfig: IDateConfig = config;
+                  if (tempConfig.formatOTDKey) {
+                    data[dataKey] = dayjs(value).format(tempConfig.formatOTDKey);
+                  } else {
+                    data[dataKey] = value;
+                  }
+                  return;
+                } else {
+                  this[propsKey] = value;
+                  return;
+                }
+              } catch (error) {
+                console.log(`OTD [${dataKey}] error with value [${value}]`);
+                console.error(error);
+              }
+            } else {
+              data[dataKey] = value;
+            }
+          });
+
+          return data;
         }
       };
     };

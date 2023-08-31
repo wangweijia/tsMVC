@@ -8,8 +8,15 @@
     "lib": [
       "esnext",
     ],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "types": ["node"],
+    "esModuleInterop": true,
+    "experimentalDecorators": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }
