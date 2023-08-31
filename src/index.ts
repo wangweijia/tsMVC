@@ -6,7 +6,7 @@ import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/model
 
 const ClassBaseModelKey = Symbol('class');
 
-export class ModelBaseClass {
+class ModelBaseClass2 {
   [k: string]: any;
   constructor(...args: any[]) {}
 
@@ -16,6 +16,16 @@ export class ModelBaseClass {
     return v || getUUID();
   }
 
+  _OTD_?() {
+    return {};
+  }
+
+  static InitWithList?() {
+    return [];
+  }
+}
+
+export class ModelBaseClass extends ModelBaseClass2 {
   _OTD_() {
     return {};
   }
@@ -24,7 +34,9 @@ export class ModelBaseClass {
     return [];
   }
 }
+
 type TClass = typeof ModelBaseClass;
+type TClass2 = typeof ModelBaseClass2;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
@@ -55,7 +67,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
     }
   };
 
-  return function <T extends TClass>(constructor: T, _?: any): T {
+  return function <T extends TClass2>(constructor: T, _?: any): T & TClass {
     const createClass = () => {
       return class extends constructor {
         constructor(...baseProps: Array<any>) {
@@ -238,6 +250,6 @@ export function ModelEnter(opt: IClassOpt = {}) {
       };
     };
 
-    return createClass() as T;
+    return createClass() as any;
   };
 }

@@ -1,7 +1,7 @@
 import { ModelCol, ModelAutoUUID, ModelEnter, ModelBaseClass } from '../src/index';
 
 @ModelEnter()
-class Demo2 extends ModelBaseClass {
+class Demo2 {
   @ModelCol({})
   subDemo1 = '';
 

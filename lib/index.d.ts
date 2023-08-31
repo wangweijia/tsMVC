@@ -1,17 +1,22 @@
 import 'reflect-metadata';
 import { TConfig } from './types/modelConfig';
-export declare class ModelBaseClass {
+declare class ModelBaseClass2 {
     [k: string]: any;
     constructor(...args: any[]);
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
+    _OTD_?(): {};
+    static InitWithList?(): never[];
+}
+export declare class ModelBaseClass extends ModelBaseClass2 {
     _OTD_(): {};
     static InitWithList(): never[];
 }
+type TClass = typeof ModelBaseClass;
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;
 export declare function ModelAutoUUID(): (target: any, propertyKey: any) => void;
 interface IClassOpt {
     _debugger_?: boolean;
 }
-export declare function ModelEnter(opt?: IClassOpt): <T extends typeof ModelBaseClass>(constructor: T, _?: any) => T;
+export declare function ModelEnter(opt?: IClassOpt): <T extends typeof ModelBaseClass2>(constructor: T, _?: any) => T & typeof ModelBaseClass;
 export {};
