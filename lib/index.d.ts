@@ -6,11 +6,11 @@ declare class ModelBaseClass2 {
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
     _OTD_?(): {};
-    static InitWithList?(): never[];
+    static InitWithList?(items: Array<any>): Array<any>;
 }
 export declare class ModelBaseClass extends ModelBaseClass2 {
     _OTD_(): {};
-    static InitWithList(): never[];
+    static InitWithList(items: Array<any>): never[];
 }
 type TClass = typeof ModelBaseClass;
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;

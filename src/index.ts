@@ -20,7 +20,7 @@ class ModelBaseClass2 {
     return {};
   }
 
-  static InitWithList?() {
+  static InitWithList?(items: Array<any>): Array<any> {
     return [];
   }
 }
@@ -30,7 +30,7 @@ export class ModelBaseClass extends ModelBaseClass2 {
     return {};
   }
 
-  static InitWithList() {
+  static InitWithList(items: Array<any>) {
     return [];
   }
 }
@@ -172,7 +172,8 @@ export function ModelEnter(opt: IClassOpt = {}) {
         // 类方法，用于批量创建自己
         static InitWithList(dataList: Array<any>) {
           return dataList.map((item) => {
-            return new (createClass())(item);
+            const temp: any = new (createClass())(item);
+            return temp;
           });
         }
 
