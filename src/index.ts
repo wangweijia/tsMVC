@@ -30,7 +30,7 @@ export class ModelBaseClass extends ModelBaseClass2 {
     return {};
   }
 
-  static InitWithList(items: Array<any>) {
+  static InitWithList<T>(items: Array<any>): Array<T> {
     return [];
   }
 }
@@ -170,7 +170,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
         }
 
         // 类方法，用于批量创建自己
-        static InitWithList(dataList: Array<any>) {
+        static InitWithList(dataList: Array<any>): Array<T> {
           return dataList.map((item) => {
             const temp: any = new (createClass())(item);
             return temp;

@@ -55,6 +55,8 @@ const demo = new Demo({
   test5: [subItem],
 });
 
+const t = Demo.InitWithList<Demo>([]);
+
 console.log('init');
 console.log(demo);
 console.log('otd');

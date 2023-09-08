@@ -10,7 +10,7 @@ declare class ModelBaseClass2 {
 }
 export declare class ModelBaseClass extends ModelBaseClass2 {
     _OTD_(): {};
-    static InitWithList(items: Array<any>): never[];
+    static InitWithList<T>(items: Array<any>): Array<T>;
 }
 type TClass = typeof ModelBaseClass;
 export declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;
