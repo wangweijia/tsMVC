@@ -1,7 +1,7 @@
 import { ModelCol, ModelAutoUUID, ModelEnter, ModelBaseClass } from '../src/index';
 
 @ModelEnter()
-class Demo2 {
+class Demo2 extends ModelBaseClass {
   @ModelCol({})
   subDemo1 = '';
 
@@ -55,9 +55,33 @@ const demo = new Demo({
   test5: [subItem],
 });
 
-const t = Demo.InitWithList<Demo>([]);
+const t = Demo.InitWithList<Demo>([
+  {
+    wwjTest: 'wwjTest',
+    test2: 'test2',
+    test3: 'test3',
+    test4: subItem,
+    test5: [subItem],
+  },
+  // {
+  //   wwjTest: 'wwjTest2',
+  //   test2: 'test-2',
+  //   test3: 'test-2',
+  //   test4: subItem,
+  //   test5: [subItem],
+  // },
+  // {
+  //   wwjTest: 'wwjTest3',
+  //   test2: 'test-3',
+  //   test3: 'test-3',
+  //   test4: subItem,
+  //   test5: [subItem],
+  // },
+]);
 
-console.log('init');
+console.log('t', t);
+// console.log('init');
 console.log(demo);
-console.log('otd');
-console.log(demo._OTD_());
+// console.log('otd');
+// console.log(demo._OTD_());
+console.log('-');

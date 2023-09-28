@@ -6,9 +6,11 @@ import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/model
 
 const ClassBaseModelKey = Symbol('class');
 
-class ModelBaseClass2 {
-  [k: string]: any;
+class ModelBaseClassRoot {
+  // [k: string]: any;
   constructor(...args: any[]) {}
+
+  _baseProse_: any = {};
 
   _init_?(...p: any) {}
 
@@ -25,7 +27,7 @@ class ModelBaseClass2 {
   }
 }
 
-export class ModelBaseClass extends ModelBaseClass2 {
+export class ModelBaseClass extends ModelBaseClassRoot {
   _OTD_() {
     return {};
   }
@@ -35,15 +37,21 @@ export class ModelBaseClass extends ModelBaseClass2 {
   }
 }
 
-type TClass = typeof ModelBaseClass;
-type TClass2 = typeof ModelBaseClass2;
+type TClassBaseRoot = typeof ModelBaseClassRoot;
+type TClassBase = typeof ModelBaseClass;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
+    // if (!target.Prototype._baseKeys) {
+    //   target.Prototype._baseKeys = [];
+    // }
+
     if (!target._baseKeys) {
       target._baseKeys = [];
     }
+
     target._baseKeys.push(propertyKey);
+    // target.Prototype._baseKeys.push(propertyKey);
 
     const newFun = Reflect.metadata(ClassBaseModelKey, config);
     newFun(target, propertyKey);
@@ -67,7 +75,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
     }
   };
 
-  return function <T extends TClass2>(constructor: T, _?: any): T & TClass {
+  return function <T extends TClassBaseRoot>(constructor: T, _?: any): T & TClassBase {
     const createClass = () => {
       return class extends constructor {
         constructor(...baseProps: Array<any>) {
@@ -76,7 +84,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
           this._baseProse_ = props;
 
-          (this._baseKeys || []).forEach((propsKey: string) => {
+          ((this as any)._baseKeys || []).forEach((propsKey: string) => {
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
             const key = config.key || propsKey;
 
@@ -93,7 +101,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
               if (value === null) {
                 if (config.enableNULL) {
                   // 如果数据是 null，并且允许数据是 null，那么赋值 null
-                  this[propsKey] = value;
+                  (this as any)[propsKey] = value;
                   return;
                 }
                 console.warn(`[key:${key}] is null`);
@@ -105,9 +113,9 @@ export function ModelEnter(opt: IClassOpt = {}) {
               if (config.type === 'UUID') {
                 const uuid = getUUID();
                 if (this._initUUID_) {
-                  this[propsKey] = this._initUUID_(uuid);
+                  (this as any)[propsKey] = this._initUUID_(uuid);
                 } else {
-                  this[propsKey] = uuid;
+                  (this as any)[propsKey] = uuid;
                 }
                 return;
               }
@@ -117,11 +125,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   customLog(`type`, config.type);
 
                   if (!config.type || config.type === 'single') {
-                    this[propsKey] = value;
+                    (this as any)[propsKey] = value;
                     return;
                   } else if (config.type === 'array') {
                     const tempConfig: IArrayConfig = config;
-                    this[propsKey] = (value || []).map((arrayItem: any) => {
+                    (this as any)[propsKey] = (value || []).map((arrayItem: any) => {
                       customLog('tempConfig.arrayItem:', tempConfig.arrayItem);
                       customLog(`array arrayItem:`, arrayItem);
 
@@ -136,22 +144,22 @@ export function ModelEnter(opt: IClassOpt = {}) {
                     const tempConfig: IObjectConfig = config;
 
                     if (tempConfig.objectItem === 'Self') {
-                      this[propsKey] = new (createClass() as any)(value);
+                      (this as any)[propsKey] = new (createClass() as any)(value);
                     } else {
-                      this[propsKey] = new tempConfig.objectItem(value);
+                      (this as any)[propsKey] = new tempConfig.objectItem(value);
                     }
 
                     return;
                   } else if (config.type === 'date') {
                     const tempConfig: IDateConfig = config;
                     if (tempConfig.formatDTOKey) {
-                      this[propsKey] = dayjs(value).format(tempConfig.formatDTOKey);
+                      (this as any)[propsKey] = dayjs(value).format(tempConfig.formatDTOKey);
                     } else {
-                      this[propsKey] = value;
+                      (this as any)[propsKey] = value;
                     }
                     return;
                   } else {
-                    this[propsKey] = value;
+                    (this as any)[propsKey] = value;
                     return;
                   }
                 } catch (error) {
@@ -181,7 +189,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
         _OTD_(): any {
           const data: any = {};
 
-          this._baseKeys.forEach((propsKey: string) => {
+          (this as any)._baseKeys.forEach((propsKey: string) => {
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
 
             // 反向数据格式化
@@ -189,7 +197,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
             // 格式化数据
             const formatData = config.formatData;
             // 获取原始 数据
-            let value = this[propsKey];
+            let value = (this as any)[propsKey];
 
             // 如果有格式化方法，格式化数据
             if (formatData) {
@@ -234,7 +242,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   }
                   return;
                 } else {
-                  this[propsKey] = value;
+                  (this as any)[propsKey] = value;
                   return;
                 }
               } catch (error) {

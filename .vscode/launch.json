@@ -5,12 +5,13 @@
       "type": "node",
       "request": "launch",
       "name": "Debug TypeScript",
-      "runtimeArgs": [],
+      "runtimeArgs": [
+        "ts-node", "./demo/index.ts"
+      ],
       "args": ["${workspaceFolder}/demo/index.ts"],
       "cwd": "${workspaceFolder}",
       "sourceMaps": true,
-      "protocol": "inspector",
-      "runtimeExecutable": "/Users/weijia.wang1/.nvm/versions/node/v14.19.3/bin/node"
+      "runtimeExecutable": "npx"
     }
   ]
 }
