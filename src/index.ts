@@ -7,11 +7,8 @@ import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/model
 const ClassBaseModelKey = Symbol('class');
 
 class ModelBaseClassRoot {
-  // [k: string]: any;
-  constructor(...args: any[]) {}
-
   _baseProse_: any = {};
-
+  constructor(...args: any[]) {}
   _init_?(...p: any) {}
 
   _initUUID_?(v?: string) {

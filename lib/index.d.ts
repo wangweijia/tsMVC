@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { TConfig } from './types/modelConfig';
 declare class ModelBaseClassRoot {
-    constructor(...args: any[]);
     _baseProse_: any;
+    constructor(...args: any[]);
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
     _OTD_?(): {};
