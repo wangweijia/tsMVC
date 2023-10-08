@@ -1,6 +1,6 @@
 {
   "name": "@nio-fe/ts-mvc-model",
-  "version": "2.0.35",
+  "version": "2.0.36",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,7 +12,7 @@
     "lint": "tslint -p tsconfig.json",
     "runDemo": "npx ts-node ./demo/index.ts",
     "buildWb": "rm -rf lib && npx webpack",
-    "buildRo": "rm -rf lib && tsc && rollup -c"
+    "buildRo": "rm -rf lib && rollup -c"
   },
   "keywords": [],
   "author": "",
