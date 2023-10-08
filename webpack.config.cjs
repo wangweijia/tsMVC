@@ -5,6 +5,10 @@ module.exports = {
   output: {
     filename: 'index.js', // 输出文件名
     path: path.resolve(__dirname, 'lib'), // 输出目录
+    library: {
+      name: 'mvc',
+      type: 'assign-properties',
+    },
   },
   resolve: {
     extensions: ['.ts', '.js'], // 支持的文件扩展名
@@ -18,8 +22,8 @@ module.exports = {
       },
     ],
   },
-  mode: 'development',
-  optimization: {
-    minimize: false,
-  },
+  // mode: 'development',
+  // optimization: {
+  //   minimize: false,
+  // },
 };
