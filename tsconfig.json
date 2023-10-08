@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
@@ -11,7 +11,12 @@
     "moduleResolution": "node",
     "types": ["node"],
     "esModuleInterop": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/__tests__/*"],
@@ -20,3 +25,4 @@
     "experimentalSpecifierResolution": "node"
   }
 }
+
