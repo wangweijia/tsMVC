@@ -1,6 +1,6 @@
 {
   "name": "@nio-fe/ts-mvc-model",
-  "version": "2.0.32",
+  "version": "2.0.33",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,21 +11,29 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "runDemo": "npx ts-node ./demo/index.ts",
-    "buildWb": "rm -rf lib && npx webpack"
+    "buildWb": "rm -rf lib && npx webpack",
+    "buildRo": "rm -rf lib && tsc && rollup -c"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/node": "^18.16.0",
     "nodemon": "^3.0.1",
     "prettier": "^2.8.8",
+    "rollup": "^4.0.2",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
     "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
-    "tslib": "^2.5.0",
+    "tslib": "^2.6.2",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^5.0.4",
+    "typescript": "^5.2.2",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   },
@@ -36,5 +44,9 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "exports": {
+    "import": "./index.js",
+    "default": "./index.js"
+  }
 }
