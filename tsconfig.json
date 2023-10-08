@@ -6,7 +6,7 @@
     "outDir": "./lib",
     "strict": true,
     "lib": [
-      "esnext",
+      "esnext", "es2015", "dom"
     ],
     "moduleResolution": "node",
     "types": ["node"],
