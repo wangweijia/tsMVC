@@ -1,6 +1,6 @@
 {
   "name": "@nio-fe/ts-mvc-model",
-  "version": "2.0.28",
+  "version": "2.0.29",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,7 +10,8 @@
     "build": "rm -rf lib && tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "runDemo": "npx ts-node ./demo/index.ts"
+    "runDemo": "npx ts-node ./demo/index.ts",
+    "buildWb": "rm -rf lib && npx webpack"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +20,14 @@
     "@types/node": "^18.16.0",
     "nodemon": "^3.0.1",
     "prettier": "^2.8.8",
+    "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.5.0",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "dayjs": "^1.11.9",
