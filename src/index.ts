@@ -107,6 +107,10 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
               customLog(`value:`, value);
 
+              if (config.ignoreDTO) {
+                return;
+              }
+
               if (config.type === 'UUID') {
                 const uuid = getUUID();
                 if (this._initUUID_) {
@@ -188,6 +192,11 @@ export function ModelEnter(opt: IClassOpt = {}) {
 
           (this as any)._baseKeys.forEach((propsKey: string) => {
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
+
+            if (config.ignoreOTD) {
+              // 忽略掉不需要 从对象重新再 赋值为 数据源的字段
+              return;
+            }
 
             // 反向数据格式化
             const dataKey = config.key || propsKey;

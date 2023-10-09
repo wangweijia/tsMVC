@@ -7,6 +7,10 @@ export interface IConfig {
   formatValue?: (value: any, baseValue: any) => any;
   // 格式化 数据(OTD)
   formatData?: (value: any, baseValue: any) => any;
+  // 忽略 数据属性 初始为 对象
+  ignoreDTO?: boolean;
+  // 忽略 对象属性 生成为 数据
+  ignoreOTD?: boolean;
 }
 
 // 普通类型

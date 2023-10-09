@@ -32,6 +32,7 @@ export class Demo extends ModelBaseClass {
   @ModelCol({
     type: 'object',
     objectItem: Demo2,
+    ignoreOTD: true,
   })
   test4 = '';
 
@@ -79,9 +80,12 @@ const t = Demo.InitWithList<Demo>([
   // },
 ]);
 
-console.log('t', t);
+// console.log('t', t);
 // console.log('init');
-console.log(demo);
+// console.log(demo);
+
+console.log(demo._OTD_());
+
 // console.log('otd');
 // console.log(demo._OTD_());
-console.log('-');
+// console.log('-');

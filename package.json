@@ -7,11 +7,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf lib && tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "runDemo": "npx ts-node ./demo/index.ts",
-    "buildWb": "rm -rf lib && npx webpack",
     "buildRo": "rm -rf lib && rollup -c"
   },
   "keywords": [],
