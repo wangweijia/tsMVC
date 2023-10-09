@@ -3,6 +3,8 @@ interface IConfig {
     enableNULL?: boolean;
     formatValue?: (value: any, baseValue: any) => any;
     formatData?: (value: any, baseValue: any) => any;
+    ignoreDTO?: boolean;
+    ignoreOTD?: boolean;
 }
 interface ISingleConfig extends IConfig {
     type?: 'single';
