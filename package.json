@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "dayjs": "^1.11.9",
-    "pinia": "^2.0.32",
     "reflect-metadata": "^0.1.13"
   },
   "files": [
