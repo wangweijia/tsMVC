@@ -39,16 +39,11 @@ type TClassBase = typeof ModelBaseClass;
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
-    // if (!target.Prototype._baseKeys) {
-    //   target.Prototype._baseKeys = [];
-    // }
-
     if (!target._baseKeys) {
       target._baseKeys = [];
     }
 
     target._baseKeys.push(propertyKey);
-    // target.Prototype._baseKeys.push(propertyKey);
 
     const newFun = Reflect.metadata(ClassBaseModelKey, config);
     newFun(target, propertyKey);
@@ -69,6 +64,12 @@ export function ModelEnter(opt: IClassOpt = {}) {
   const customLog = (...info: any[]) => {
     if (opt._debugger_) {
       console.log('mvc info:', ...info);
+    }
+  };
+
+  const customWarn = (...info: any[]) => {
+    if (opt._debugger_) {
+      customWarn('mvc warn:', ...info);
     }
   };
 
@@ -101,7 +102,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   (this as any)[propsKey] = value;
                   return;
                 }
-                console.warn(`[key:${key}] is null`);
+                customWarn(`[key:${key}] is null`);
                 return;
               }
 
@@ -169,7 +170,7 @@ export function ModelEnter(opt: IClassOpt = {}) {
                 }
               }
             } else {
-              console.warn('model init no props');
+              customWarn('model init no props');
             }
           });
 
