@@ -5,19 +5,33 @@ import { getUUID } from './util/index';
 import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/modelConfig';
 
 const ClassBaseModelKey = Symbol('class');
+const ClassPathKey = Symbol('ClassPathKey');
 
 class ModelBaseClassRoot {
   _baseProse_: any = {};
+  _path_: Array<string | number> = [];
   constructor(...args: any[]) {}
+
+  // 默认初始化方法
   _init_?(...p: any) {}
 
+  // 自定义 初始化 uuid
   _initUUID_?(v?: string) {
     return v || getUUID();
   }
 
+  // 对象 初始化成 数据结构
   _OTD_?() {
     return {};
   }
+
+  // 初始化 树状路径
+  _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number> {
+    return [...basePath];
+  }
+
+  // 树状数据 展开成 列表数据
+  _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {}
 
   static InitWithList?(items: Array<any>): Array<any> {
     return [];
@@ -36,6 +50,22 @@ export class ModelBaseClass extends ModelBaseClassRoot {
 
 type TClassBaseRoot = typeof ModelBaseClassRoot;
 type TClassBase = typeof ModelBaseClass;
+
+const DefPathName = '_def_path_Name_';
+export function ModelPath(config: { type: 'id' | 'source'; pathName?: string }) {
+  return function (target: any, propertyKey: any) {
+    const pathName = config.pathName || DefPathName;
+
+    const paths: any = Reflect.getMetadata(ClassPathKey, target, pathName) || {};
+    if (config.type === 'id') {
+      paths.id = propertyKey;
+    } else {
+      paths.source = propertyKey;
+    }
+    const newFun = Reflect.metadata(ClassPathKey, paths);
+    newFun(target, pathName);
+  };
+}
 
 export function ModelCol(config: TConfig) {
   return function (target: any, propertyKey: any) {
@@ -58,6 +88,7 @@ export function ModelAutoUUID() {
 
 interface IClassOpt {
   _debugger_?: boolean;
+  pathName?: string;
 }
 
 export function ModelEnter(opt: IClassOpt = {}) {
@@ -177,6 +208,10 @@ export function ModelEnter(opt: IClassOpt = {}) {
           if (this._init_) {
             this._init_(props, ...otherParams);
           }
+
+          if (this._init_path_) {
+            this._init_path_([]);
+          }
         }
 
         // 类方法，用于批量创建自己
@@ -262,6 +297,40 @@ export function ModelEnter(opt: IClassOpt = {}) {
           });
 
           return data;
+        }
+
+        _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number> {
+          const pathKey = opt.pathName || '_path_';
+          const currentPathName = pathName || DefPathName;
+          const pathConfig: any = Reflect.getMetadata(ClassPathKey, this, currentPathName) || {};
+
+          if (pathConfig.id) {
+            (this as any)[pathKey] = [...basePath, (this as any)[pathConfig.id]];
+          }
+
+          if (pathConfig.source) {
+            ((this as any)[pathConfig.source] || []).forEach((subItem: any) => {
+              if (subItem._init_path_) {
+                subItem._init_path_(this._path_, currentPathName);
+              }
+            });
+          }
+
+          return (this as any)[pathKey];
+        }
+
+        _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {
+          const currentPathName = pathName || DefPathName;
+          const pathConfig: any = Reflect.getMetadata(ClassPathKey, this, currentPathName) || {};
+          baseList.push(this as any);
+
+          if (pathConfig.source) {
+            ((this as any)[pathConfig.source] || []).forEach((subItem: any) => {
+              if (subItem._tree_to_list_) {
+                subItem._tree_to_list_(baseList, currentPathName);
+              }
+            });
+          }
         }
       };
     };
