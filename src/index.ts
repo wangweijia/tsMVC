@@ -43,6 +43,9 @@ export class ModelBaseClass extends ModelBaseClassRoot {
     return {};
   }
 
+  // 树状数据 展开成 列表数据
+  _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {}
+
   static InitWithList<T>(items: Array<any>): Array<T> {
     return [];
   }

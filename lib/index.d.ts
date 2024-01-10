@@ -40,6 +40,7 @@ declare class ModelBaseClassRoot {
 }
 declare class ModelBaseClass extends ModelBaseClassRoot {
     _OTD_(): {};
+    _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): void;
     static InitWithList<T>(items: Array<any>): Array<T>;
 }
 declare function ModelPath(config: {
