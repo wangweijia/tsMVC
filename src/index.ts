@@ -44,7 +44,9 @@ export class ModelBaseClass extends ModelBaseClassRoot {
   }
 
   // 树状数据 展开成 列表数据
-  _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {}
+  _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): Array<T> {
+    return baseList || [];
+  }
 
   static InitWithList<T>(items: Array<any>): Array<T> {
     return [];
@@ -330,18 +332,20 @@ export function ModelEnter(opt: IClassOpt = {}) {
           return (this as any)[pathKey];
         }
 
-        _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {
+        _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): Array<T> {
           const currentPathName = pathName || DefPathName;
           const pathConfig: any = Reflect.getMetadata(ClassPathKey, this, currentPathName) || {};
-          baseList.push(this as any);
+          const valueList = baseList || [];
+          valueList.push(this as any);
 
           if (pathConfig.source) {
             ((this as any)[pathConfig.source] || []).forEach((subItem: any) => {
               if (subItem._tree_to_list_) {
-                subItem._tree_to_list_(baseList, currentPathName);
+                subItem._tree_to_list_(valueList, currentPathName);
               }
             });
           }
+          return valueList;
         }
       };
     };
