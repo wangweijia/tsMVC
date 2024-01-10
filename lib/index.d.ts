@@ -42,6 +42,7 @@ declare class ModelBaseClass extends ModelBaseClassRoot {
     _OTD_(): {};
     _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): void;
     static InitWithList<T>(items: Array<any>): Array<T>;
+    static TreeToList<T extends ModelBaseClass>(array: Array<T>, pathName?: string): Array<T>;
 }
 declare function ModelPath(config: {
     type: 'id' | 'source';

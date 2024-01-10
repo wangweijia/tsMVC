@@ -49,6 +49,14 @@ export class ModelBaseClass extends ModelBaseClassRoot {
   static InitWithList<T>(items: Array<any>): Array<T> {
     return [];
   }
+
+  static TreeToList<T extends ModelBaseClass>(array: Array<T>, pathName?: string): Array<T> {
+    const list: Array<T> = [];
+    array.forEach((item) => {
+      item._tree_to_list_(list, pathName);
+    });
+    return list;
+  }
 }
 
 type TClassBaseRoot = typeof ModelBaseClassRoot;
