@@ -29,21 +29,29 @@ type TConfig = ISingleConfig | IArrayConfig | IObjectConfig | IDateConfig | IUUI
 
 declare class ModelBaseClassRoot {
     _baseProse_: any;
+    _path_: Array<string | number>;
     constructor(...args: any[]);
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
     _OTD_?(): {};
+    _init_path_(basePath?: Array<string | number>, pathName?: string): Array<string | number>;
+    _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): void;
     static InitWithList?(items: Array<any>): Array<any>;
 }
 declare class ModelBaseClass extends ModelBaseClassRoot {
     _OTD_(): {};
     static InitWithList<T>(items: Array<any>): Array<T>;
 }
+declare function ModelPath(config: {
+    type: 'id' | 'source';
+    pathName?: string;
+}): (target: any, propertyKey: any) => void;
 declare function ModelCol(config: TConfig): (target: any, propertyKey: any) => void;
 declare function ModelAutoUUID(): (target: any, propertyKey: any) => void;
 interface IClassOpt {
     _debugger_?: boolean;
+    pathName?: string;
 }
 declare function ModelEnter(opt?: IClassOpt): <T extends typeof ModelBaseClassRoot>(constructor: T, _?: any) => T & typeof ModelBaseClass;
 
-export { ModelAutoUUID, ModelBaseClass, ModelCol, ModelEnter };
+export { ModelAutoUUID, ModelBaseClass, ModelCol, ModelEnter, ModelPath };
