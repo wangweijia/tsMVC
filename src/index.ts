@@ -19,26 +19,10 @@ class ModelBaseClassRoot {
   _initUUID_?(v?: string) {
     return v || getUUID();
   }
-
-  // 对象 初始化成 数据结构
-  _OTD_?() {
-    return {};
-  }
-
-  // 初始化 树状路径
-  _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number> {
-    return [...basePath];
-  }
-
-  // 树状数据 展开成 列表数据
-  _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string) {}
-
-  static InitWithList?(items: Array<any>): Array<any> {
-    return [];
-  }
 }
 
 export class ModelBaseClass extends ModelBaseClassRoot {
+  // object  => data
   _OTD_() {
     return {};
   }
