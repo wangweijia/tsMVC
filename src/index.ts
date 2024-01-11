@@ -32,6 +32,10 @@ export class ModelBaseClass extends ModelBaseClassRoot {
     return baseList || [];
   }
 
+  _copy_<T extends ModelBaseClass>(deep?: boolean): T {
+    return this as any;
+  }
+
   static InitWithList<T>(items: Array<any>): Array<T> {
     return [];
   }
@@ -330,6 +334,24 @@ export function ModelEnter(opt: IClassOpt = {}) {
             });
           }
           return valueList;
+        }
+
+        _copy_(deep?: boolean) {
+          const temp = new (createClass() as any)({});
+          Object.assign(temp, this);
+          if (deep) {
+            ((this as any)._baseKeys || []).forEach((propsKey: string) => {
+              const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
+              const key = config.key || propsKey;
+              if (config.type === 'object') {
+                temp[key] = temp[key]._copy_(true);
+              } else if (config.type === 'array') {
+                temp[key] = temp[key].map((item: any) => item._copy_(true));
+              }
+            });
+          }
+
+          return temp;
         }
       };
     };

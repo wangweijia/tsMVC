@@ -23,17 +23,11 @@ export class Demo extends ModelBaseClass {
   @ModelCol({})
   test2 = '';
 
-  // @ModelCol({
-  //   type: 'date',
-  // })
-  // test3 = '';
-
-  // @ModelCol({
-  //   type: 'object',
-  //   objectItem: Demo2,
-  //   ignoreOTD: true,
-  // })
-  // test4 = '';
+  @ModelCol({
+    type: 'object',
+    objectItem: Demo2,
+  })
+  test4: Demo2 | undefined;
 
   @ModelPath({
     type: 'source',
@@ -48,6 +42,9 @@ export class Demo extends ModelBaseClass {
 const dataList = [
   {
     test2: 'test2-1',
+    test4: {
+      subDemo1: 'bbb1-1',
+    },
     test5: [
       {
         subDemo1: '1-1',
@@ -83,61 +80,13 @@ const dataList = [
 
 const tree = dataList.map((item) => new Demo(item));
 
-// list.forEach((item) => {
-//   item.test5.forEach((sub) => {
-//     console.log(sub);
-//   });
-// });
+const item0: Demo = tree[0];
+const itemCopy: Demo = item0._copy_(true);
 
-const list: Array<any> = [];
+item0.test2 = 'cccc';
+if (itemCopy.test4) {
+  itemCopy.test4.subDemo1 = '2222222';
+}
 
-tree.forEach((item) => item._tree_to_list_(list));
-
-console.log(list);
-
-// const subItem = {
-//   subDemo1: 1,
-//   dddd: 2,
-// };
-
-// const demo = new Demo({
-//   wwjTest: 'wwjTest',
-//   test2: 'test2',
-//   test3: 'test3',
-//   test4: subItem,
-//   test5: [subItem],
-// });
-
-// const t = Demo.InitWithList<Demo>([
-//   {
-//     wwjTest: 'wwjTest',
-//     test2: 'test2',
-//     test3: 'test3',
-//     test4: subItem,
-//     test5: [subItem],
-//   },
-//   // {
-//   //   wwjTest: 'wwjTest2',
-//   //   test2: 'test-2',
-//   //   test3: 'test-2',
-//   //   test4: subItem,
-//   //   test5: [subItem],
-//   // },
-//   // {
-//   //   wwjTest: 'wwjTest3',
-//   //   test2: 'test-3',
-//   //   test3: 'test-3',
-//   //   test4: subItem,
-//   //   test5: [subItem],
-//   // },
-// ]);
-
-// console.log('t', t);
-// console.log('init');
-// console.log(demo);
-
-// console.log(demo._OTD_());
-
-// console.log('otd');
-// console.log(demo._OTD_());
-// console.log('-');
+console.log(item0);
+console.log(itemCopy);

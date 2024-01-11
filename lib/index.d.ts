@@ -33,14 +33,11 @@ declare class ModelBaseClassRoot {
     constructor(...args: any[]);
     _init_?(...p: any): void;
     _initUUID_?(v?: string): string;
-    _OTD_?(): {};
-    _init_path_(basePath?: Array<string | number>, pathName?: string): Array<string | number>;
-    _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): void;
-    static InitWithList?(items: Array<any>): Array<any>;
 }
 declare class ModelBaseClass extends ModelBaseClassRoot {
     _OTD_(): {};
     _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): Array<T>;
+    _copy_<T extends ModelBaseClass>(deep?: boolean): T;
     static InitWithList<T>(items: Array<any>): Array<T>;
     static TreeToList<T extends ModelBaseClass>(array: Array<T>, pathName?: string): Array<T>;
 }
