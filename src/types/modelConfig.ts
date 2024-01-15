@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export interface IConfig {
   // 数据源 key，用于对应原始数据，不传默认与 对象字段相同
   key?: string;
@@ -30,11 +32,21 @@ export interface IArrayConfig extends IConfig {
   arrayItem: 'Self' | (new (...p: any) => any);
 }
 
+export type InitDayjs = (
+  value: any,
+  baseValue: any,
+) => {
+  date?: dayjs.ConfigType;
+  format?: dayjs.OptionType;
+  strict?: boolean;
+  valueFormat: string;
+};
+
 // 时间类型
 export interface IDateConfig extends IConfig {
   type: 'date';
-  formatDTOKey?: string;
-  formatOTDKey?: string;
+  formatDTOKey?: string | InitDayjs;
+  formatOTDKey?: string | InitDayjs;
 }
 
 export interface IUUIDConfig extends IConfig {

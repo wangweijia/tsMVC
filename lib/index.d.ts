@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 interface IConfig {
     key?: string;
     enableNULL?: boolean;
@@ -17,10 +19,16 @@ interface IArrayConfig extends IConfig {
     type: 'array';
     arrayItem: 'Self' | (new (...p: any) => any);
 }
+type InitDayjs = (value: any, baseValue: any) => {
+    date?: dayjs.ConfigType;
+    format?: dayjs.OptionType;
+    strict?: boolean;
+    valueFormat: string;
+};
 interface IDateConfig extends IConfig {
     type: 'date';
-    formatDTOKey?: string;
-    formatOTDKey?: string;
+    formatDTOKey?: string | InitDayjs;
+    formatOTDKey?: string | InitDayjs;
 }
 interface IUUIDConfig extends IConfig {
     type: 'UUID';

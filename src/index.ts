@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 import dayjs from 'dayjs';
 import { getUUID } from './util/index';
-
-import { IObjectConfig, IArrayConfig, IDateConfig, TConfig } from './types/modelConfig';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { IObjectConfig, IArrayConfig, IDateConfig, TConfig, InitDayjs } from './types/modelConfig';
 
 const ClassBaseModelKey = Symbol('class');
 const ClassPathKey = Symbol('ClassPathKey');
+dayjs.extend(customParseFormat);
 
 class ModelBaseClassRoot {
   _baseProse_: any = {};
@@ -90,6 +91,11 @@ export function ModelAutoUUID() {
 interface IClassOpt {
   _debugger_?: boolean;
   pathName?: string;
+}
+
+// 判断 formatDTOKey 的类型
+function isInitDayjs(value: any): value is InitDayjs {
+  return typeof value === 'function';
 }
 
 export function ModelEnter(opt: IClassOpt = {}) {
@@ -187,7 +193,14 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   } else if (config.type === 'date') {
                     const tempConfig: IDateConfig = config;
                     if (tempConfig.formatDTOKey) {
-                      (this as any)[propsKey] = dayjs(value).format(tempConfig.formatDTOKey);
+                      if (typeof tempConfig.formatDTOKey === 'string') {
+                        (this as any)[propsKey] = dayjs(value).format(tempConfig.formatDTOKey);
+                        return;
+                      } else if (isInitDayjs(tempConfig.formatDTOKey)) {
+                        const opt = tempConfig.formatDTOKey(value, props);
+                        (this as any)[propsKey] = dayjs(opt.date || value, opt.format).format(opt.valueFormat);
+                        return;
+                      }
                     } else {
                       (this as any)[propsKey] = value;
                     }
@@ -279,7 +292,14 @@ export function ModelEnter(opt: IClassOpt = {}) {
                   // 日期
                   const tempConfig: IDateConfig = config;
                   if (tempConfig.formatOTDKey) {
-                    data[dataKey] = dayjs(value).format(tempConfig.formatOTDKey);
+                    if (typeof tempConfig.formatOTDKey === 'string') {
+                      data[dataKey] = dayjs(value).format(tempConfig.formatOTDKey);
+                      return;
+                    } else if (isInitDayjs(tempConfig.formatOTDKey)) {
+                      const opt = tempConfig.formatOTDKey(value, this);
+                      data[dataKey] = dayjs(opt.date || value, opt.format, opt.strict).format(opt.valueFormat);
+                      return;
+                    }
                   } else {
                     data[dataKey] = value;
                   }
