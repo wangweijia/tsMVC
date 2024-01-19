@@ -45,6 +45,7 @@ declare class ModelBaseClassRoot {
 declare class ModelBaseClass extends ModelBaseClassRoot {
     _OTD_(): {};
     _tree_to_list_<T extends any>(baseList: Array<T>, pathName?: string): Array<T>;
+    _init_path_(basePath?: Array<string | number>, pathName?: string): Array<string | number>;
     _copy_<T extends ModelBaseClass>(deep?: boolean): T;
     static InitWithList<T>(items: Array<any>): Array<T>;
     static TreeToList<T extends ModelBaseClass>(array: Array<T>, pathName?: string): Array<T>;
