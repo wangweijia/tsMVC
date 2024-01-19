@@ -33,6 +33,10 @@ export class ModelBaseClass extends ModelBaseClassRoot {
     return baseList || [];
   }
 
+  _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number> {
+    return [];
+  }
+
   _copy_<T extends ModelBaseClass>(deep?: boolean): T {
     return this as any;
   }
