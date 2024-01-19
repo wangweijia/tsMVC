@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import dayjs from 'dayjs';
 import { getUUID } from './util/index';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import { IObjectConfig, IArrayConfig, IDateConfig, TConfig, InitDayjs } from './types/modelConfig';
 
 const ClassBaseModelKey = Symbol('class');
