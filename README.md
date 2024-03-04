@@ -53,7 +53,7 @@ yarn add ts-mvc-model
 > 3.1 **class声明**
 
 ```TypeScript
-import { ModelBaseClass, ModelEnter } from "@nio-fe/ts-mvc-model";
+import { ModelBaseClass, ModelEnter } from "ts-mvc-model";
 
 @ModelEnter()
 class TestModel extends ModelBaseClass {
@@ -82,7 +82,7 @@ import {
     ModelCol, 
     ModelAutoUUID, 
     ModelPath 
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()// 使用 ModelEnter 注册一个 数据模型
 export class TestSubModel extends ModelBaseClass {
@@ -293,7 +293,7 @@ export class TestModel extends ModelBaseClass {
 -   \_init\_
 
 ```TypeScript
-import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "@nio-fe/ts-mvc-model";
+import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
@@ -330,7 +330,7 @@ export class TestModel extends ModelBaseClass {
 -   \_initUUID\_
 
 ```TypeScript
-import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "@nio-fe/ts-mvc-model";
+import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
@@ -368,7 +368,7 @@ import {
     ModelCol, 
     ModelAutoUUID, 
     ModelPath 
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()
 export class TestSubModel extends ModelBaseClass {
@@ -691,7 +691,7 @@ import {
     ModelEnter, 
     ModelCol, 
     ModelAutoUUID, 
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
@@ -710,7 +710,7 @@ import {
     ModelBaseClass, 
     ModelEnter, 
     ModelCol
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
@@ -728,7 +728,7 @@ import {
     ModelBaseClass, 
     ModelEnter, 
     ModelCol
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
@@ -767,7 +767,7 @@ import {
     ModelBaseClass, 
     ModelEnter, 
     ModelCol
-} from "@nio-fe/ts-mvc-model";
+} from "ts-mvc-model";
 
 @ModelEnter()
 export class TestModel extends ModelBaseClass {
