@@ -27,14 +27,14 @@
 
 2\. **安装与配置**
 
-```
+```npm
 npm i ts-mvc-model
 
 yarn add ts-mvc-model
 ```
 
 
-```
+```TypeScript
 // tsconfig.json
 // "experimentalDecorators": true,  开启 ts 的修饰器
 
@@ -52,7 +52,7 @@ yarn add ts-mvc-model
 
 > 3.1 **class声明**
 
-```
+```TypeScript
 import { ModelBaseClass, ModelEnter } from "@nio-fe/ts-mvc-model";
 
 @ModelEnter()
@@ -75,7 +75,7 @@ const testItem = new TestModel(testData);
 
 -   参考案例：
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
@@ -292,7 +292,7 @@ export class TestModel extends ModelBaseClass {
 
 -   \_init\_
 
-```
+```TypeScript
 import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "@nio-fe/ts-mvc-model";
 
 @ModelEnter()
@@ -329,7 +329,7 @@ export class TestModel extends ModelBaseClass {
 
 -   \_initUUID\_
 
-```
+```TypeScript
 import { ModelBaseClass, ModelEnter, ModelCol, ModelAutoUUID } from "@nio-fe/ts-mvc-model";
 
 @ModelEnter()
@@ -361,7 +361,7 @@ export class TestModel extends ModelBaseClass {
 
 -   基础案例数据：
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
@@ -411,13 +411,13 @@ export class TestModel extends ModelBaseClass {
 
 1.  实例方法：数据模型生成数据对象的内置方法。
 
-```
+```TypeScript
 _OTD_(): any {
     //...
 }
 ```
 
-```
+```TypeScript
 const subData = { subTest: 'subTest' };
 const data = {test2: 'test2', test3: subData, test4: [subData] }
 const testModel: TestModel = new TestModel(data);
@@ -442,7 +442,7 @@ console.log(obj);
 
 -   \_init\_path\_
 
-```
+```TypeScript
 _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number>{
     //...
 }
@@ -470,7 +470,7 @@ _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<str
     生成指定路径时使用，生成路径时，会根据pathName匹配 ModelPath
     修饰器中的pathName，使用匹配到的ModelPath({type: 'id'}) 生成路径
 
-```
+```TypeScript
 // 默认生成 path
 
 const subData = { subTest: 'subTest' };
@@ -505,13 +505,13 @@ const testModel: TestModel = new TestModel(data);
 
 1.  实例方法：树状结构数据模型展开成 列表 类型数据结构
 
-```
+```TypeScript
 _init_path_(basePath: Array<string | number> = [], pathName?: string): Array<string | number>{
     //...
 }
 ```
 
-```
+```TypeScript
 const subData = { subTest: 'subTest' };
 const data = {test2: 'test2', test3: subData, test4: [subData] }
 const dataList = [data, data];
@@ -566,7 +566,7 @@ tree.forEach((item) => item._init_path_(list))
 
 -   \_copy\_
 
-```
+```TypeScript
 _copy_(deep?: boolean) {
     return any;
 }
@@ -587,13 +587,13 @@ _copy_(deep?: boolean) {
 
 1.  静态类方法：快速初始化列表数据源的
 
-```
+```TypeScript
 static InitWithList<T>(items: Array<any>): Array<T> {
     //...
 }
 ```
 
-```
+```TypeScript
 const subData = { subTest: 'subTest' };
 const data = {test2: 'test2', test3: subData, test4: [subData] }
 const dataList = [data, data];
@@ -623,13 +623,13 @@ const tree: Array<TestModel> = TestModel.InitWithList<TestModel>(dataList);
     ModelPath 修饰器中的pathName，使用匹配到的ModelPath({type:
     'source'}) 生成路径
 
-```
+```TypeScript
 static TreeToList<T extends ModelBaseClass>(array: Array<T>, pathName?: string): Array<T> {
     // ...
 }
 ```
 
-```
+```TypeScript
 const subData = { subTest: 'subTest' };
 const data = {test2: 'test2', test3: subData, test4: [subData] }
 const dataList = [data, data];
@@ -685,7 +685,7 @@ const list: Array<TestModel> = TestModel.TreeToList(tree);
 
 1.  数据没有唯一标识，前端快速生成一个唯一标识
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
@@ -705,7 +705,7 @@ export class TestModel extends ModelBaseClass {
 
 1.  服务端数据源字段命名发生变化，前端通过数据模型实现数据映射
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
@@ -723,7 +723,7 @@ export class TestModel extends ModelBaseClass {
 
 1.  服务端数据源字段类型发生变化，前端通过数据模型实现数据映射
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
@@ -762,7 +762,7 @@ const testModel = new TestModel(data);
 
 1.  前端组件入参数据格式与最终提交数据格式不一致，前端进行数据转换
 
-```
+```TypeScript
 import { 
     ModelBaseClass, 
     ModelEnter, 
