@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import dayjs from 'dayjs';
-import { getUUID } from './util/index';
+import { getUUID, convertCamelToUnderlineFun } from './util/index';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import { IObjectConfig, IArrayConfig, IDateConfig, TConfig, InitDayjs } from './types/modelConfig';
 
@@ -95,6 +95,8 @@ export function ModelAutoUUID() {
 interface IClassOpt {
   _debugger_?: boolean;
   pathName?: string;
+  // 驼峰命名 对应 服务端的 下划线命名
+  convertCamelToUnderline?: boolean;
 }
 
 // 判断 formatDTOKey 的类型
@@ -115,6 +117,13 @@ export function ModelEnter(opt: IClassOpt = {}) {
     }
   };
 
+  //   function classDecorator<T extends {new(...args:any[]):{}}>(constructor:T) {
+  //     return class extends constructor {
+  //         newProperty = "new property";
+  //         hello = "override";
+  //     }
+  // }
+
   return function <T extends TClassBaseRoot>(constructor: T, _?: any): T & TClassBase {
     const createClass = () => {
       return class extends constructor {
@@ -125,15 +134,24 @@ export function ModelEnter(opt: IClassOpt = {}) {
           this._baseProse_ = props;
 
           ((this as any)._baseKeys || []).forEach((propsKey: string) => {
+            // propsKey 默认为驼峰命名
+
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
-            const key = config.key || propsKey;
+            // const key = config.key || propsKey;
+            const key = config.key
+              ? config.key
+              : opt.convertCamelToUnderline
+              ? convertCamelToUnderlineFun(propsKey)
+              : propsKey;
+
+            const baseKey = config.key ? config.key : propsKey;
 
             customLog(`key:`, key);
 
             if (props) {
               const formatValue = config.formatValue;
               // 获取原始 数据
-              let value = props[key];
+              let value = props[key] ?? props[baseKey];
               // 如果有格式化方法，格式化数据
               if (formatValue) {
                 value = formatValue(value, props);
@@ -245,6 +263,8 @@ export function ModelEnter(opt: IClassOpt = {}) {
           const data: any = {};
 
           (this as any)._baseKeys.forEach((propsKey: string) => {
+            // propsKey 默认为驼峰命名
+
             const config: TConfig = Reflect.getMetadata(ClassBaseModelKey, this, propsKey) || {};
 
             if (config.ignoreOTD) {
@@ -253,7 +273,13 @@ export function ModelEnter(opt: IClassOpt = {}) {
             }
 
             // 反向数据格式化
-            const dataKey = config.key || propsKey;
+            // const dataKey = config.key || propsKey;
+            const dataKey = config.key
+              ? config.key
+              : opt.convertCamelToUnderline
+              ? convertCamelToUnderlineFun(propsKey)
+              : propsKey;
+
             // 格式化数据
             const formatData = config.formatData;
             // 获取原始 数据
