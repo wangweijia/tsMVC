@@ -59,6 +59,7 @@ declare function ModelAutoUUID(): (target: any, propertyKey: any) => void;
 interface IClassOpt {
     _debugger_?: boolean;
     pathName?: string;
+    convertCamelToUnderline?: boolean;
 }
 declare function ModelEnter(opt?: IClassOpt): <T extends typeof ModelBaseClassRoot>(constructor: T, _?: any) => T & typeof ModelBaseClass;
 
